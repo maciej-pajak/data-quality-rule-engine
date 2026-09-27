@@ -3,15 +3,12 @@ package pl.pajak.rule.engine;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import pl.pajak.rule.engine.rule.CountryScope;
-import pl.pajak.rule.engine.rule.DecisionMapping;
 import pl.pajak.rule.engine.rule.Rule;
-import pl.pajak.rule.engine.rule.RuleSeverity;
 import pl.pajak.rule.engine.rule.RuleStatus;
-import pl.pajak.rule.engine.rule.ValueLogic;
+import pl.pajak.rule.engine.testing.TestRule;
 
 class RuleMatcherTest {
 
@@ -188,44 +185,18 @@ class RuleMatcherTest {
   }
 
   private static Rule rule(RuleStatus status, String... categories) {
-    return rule(status, List.of(categories));
+    return TestRule.builder("test-rule")
+        .withStatus(status)
+        .withCategories(categories)
+        .withCountryScope(CountryScope.World)
+        .build();
   }
 
   private static Rule rule(RuleStatus status, List<String> categories) {
-    return new TestRule(status, categories);
-  }
-
-  /** A rule that carries only the attributes {@link RuleMatcher} looks at. */
-  private record TestRule(RuleStatus status, List<String> categories) implements Rule {
-
-    @Override
-    public String id() {
-      return "test-rule";
-    }
-
-    @Override
-    public String label() {
-      return "Test rule";
-    }
-
-    @Override
-    public RuleSeverity severity() {
-      return RuleSeverity.ERROR;
-    }
-
-    @Override
-    public Optional<CountryScope> countryScope() {
-      return Optional.of(CountryScope.World);
-    }
-
-    @Override
-    public ValueLogic logic() {
-      throw new UnsupportedOperationException("not used by the matcher");
-    }
-
-    @Override
-    public DecisionMapping decisionMapping() {
-      throw new UnsupportedOperationException("not used by the matcher");
-    }
+    return TestRule.builder("test-rule")
+        .withStatus(status)
+        .withCategories(categories)
+        .withCountryScope(CountryScope.World)
+        .build();
   }
 }
