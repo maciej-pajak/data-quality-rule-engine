@@ -4,6 +4,8 @@ import pl.pajak.dqr.engine.rule.Rule;
 
 final class RuleMatcher {
 
+  private RuleMatcher() {}
+
   static boolean matches(RuleFilter filter, Rule rule) {
     return switch (filter) {
       case RuleFilter.All all -> true;
