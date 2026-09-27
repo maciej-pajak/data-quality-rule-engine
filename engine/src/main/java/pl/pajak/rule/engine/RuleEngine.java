@@ -53,10 +53,10 @@ public class RuleEngine {
                     case ComputationResult.ComputedValue value ->
                         validationRun.onResult(resultOf(rule, partnerRecord, value));
                     case ComputationResult.ComputationError error ->
-                        validationRun.onFailure(rule, partnerRecord, error.message());
+                        validationRun.onFailure(rule, partnerRecord, error);
                   }
                 } catch (Exception ex) {
-                  validationRun.onFailure(rule, partnerRecord, ex.getMessage()); // TODO
+                  validationRun.onFailure(rule, partnerRecord, ex);
                 }
               });
     }
