@@ -1,4 +1,4 @@
-package pl.pajak.dqr.rule.java;
+package pl.pajak.dqr.example.rules;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

@@ -1,4 +1,4 @@
-package pl.pajak.dqr.rule.java.testing;
+package pl.pajak.dqr.example.rules.testing;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

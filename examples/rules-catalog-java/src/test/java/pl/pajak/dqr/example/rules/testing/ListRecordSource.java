@@ -1,4 +1,4 @@
-package pl.pajak.dqr.rule.java.testing;
+package pl.pajak.dqr.example.rules.testing;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

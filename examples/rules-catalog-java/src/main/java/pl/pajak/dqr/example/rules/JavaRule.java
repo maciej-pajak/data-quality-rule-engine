@@ -1,4 +1,4 @@
-package pl.pajak.dqr.rule.java;
+package pl.pajak.dqr.example.rules;
 
 import java.util.List;
 import java.util.Optional;

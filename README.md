@@ -5,10 +5,19 @@ catalog of data-quality rules, plus an example HTTP host that embeds it.
 
 ## Modules
 
-| Module              | What it is                                                     |
-|---------------------|----------------------------------------------------------------|
-| `:engine`           | The library. Zero runtime dependencies, no third-party types on its public API. |
-| `:examples:http-api`| A Spring Boot host demonstrating how to embed the library.     |
+| Module | Part of the product | What it is |
+|---|---|---|
+| `:engine` | yes | The library. Zero runtime dependencies, no third-party types on its public API. |
+| `:examples:rules-catalog-java` | no | The task's rule catalog, written in Java against the engine's `RuleCatalog` seam. A host supplies its own. |
+| `:examples:http-api` | no | A Spring Boot host demonstrating how to embed the library. |
+
+Everything under `:examples` is a demonstration. A consumer depends on
+`:engine` alone.
+
+The fixture scenario from the task description runs in
+[`FixtureScenarioTest`](examples/rules-catalog-java/src/test/java/pl/pajak/dqr/example/rules/FixtureScenarioTest.java):
+the three records and three rules go through the real engine and the real
+catalog, and fault isolation is covered there too.
 
 ## Requirements
 
@@ -20,7 +29,7 @@ catalog of data-quality rules, plus an example HTTP host that embeds it.
 ./gradlew build
 ```
 
-This compiles both modules, checks formatting with Spotless and runs the tests.
+This compiles every module, checks formatting with Spotless and runs the tests.
 
 ## Design
 

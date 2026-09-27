@@ -1,4 +1,4 @@
-package pl.pajak.dqr.rule.java;
+package pl.pajak.dqr.example.rules;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;

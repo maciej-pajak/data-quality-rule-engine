@@ -8,5 +8,5 @@ dependencyResolutionManagement {
 }
 
 include(":engine")
-include(":rules-java")
+include(":examples:rules-catalog-java")
 include(":examples:http-api")

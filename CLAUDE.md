@@ -7,9 +7,12 @@ scheduled jobs.
 ## Modules
 
 - `:engine` — the product. Zero runtime dependencies.
-- `:rules-java` — the task's rules written in Java; an example of a rule
-  catalog, not part of the product.
+- `:examples:rules-catalog-java` — the task's rules written in Java; an example
+  of a catalog source.
 - `:examples:http-api` — Spring Boot demonstration host.
+
+Everything under `:examples` demonstrates how to embed the product; none of it
+is the product.
 
 ## Language
 
@@ -19,7 +22,7 @@ Everything here is English: code, comments, Javadoc, test names, docs, commits.
 
 - Conventional Commits: `<type>(<scope>): <subject>`.
 - Types: `feat`, `fix`, `refactor`, `test`, `docs`, `build`, `ci`, `chore`.
-- Scopes: `engine`, `rules-java`, `http-api`, `build`, `docs`.
+- Scopes: `engine`, `rules-catalog-java`, `http-api`, `build`, `docs`.
 - Subject only: one line, imperative, lower case, no trailing period.
 - No body, footers, trailers or emoji. Rationale goes to `DESIGN.md`.
 - Commit in decision-sized slices, not per file — the history should read as
@@ -27,7 +30,7 @@ Everything here is English: code, comments, Javadoc, test names, docs, commits.
 
 ```
 feat(engine): derive decisions through a declarative value mapping
-test(rules-java): cover the fixture batch from the task description
+test(rules-catalog-java): cover the fixture batch from the task description
 build: target java 21 through options.release
 ```
 
@@ -46,7 +49,7 @@ build: target java 21 through options.release
   Hosts adapt their own types to the engine's seams.
 - Spring stays in `:examples`. Jackson stays `implementation`-scoped.
 - `:engine` keeps its runtime dependencies at zero unless `DESIGN.md` records
-  a reason. Neither `:rules-java` nor `:examples` is a product dependency.
+  a reason. `:examples` is never a product dependency.
 - Decision mapping stays data. No if/else chain computing a `Decision` in a
   rule.
 - Results are emitted as produced. No public method may require or return a

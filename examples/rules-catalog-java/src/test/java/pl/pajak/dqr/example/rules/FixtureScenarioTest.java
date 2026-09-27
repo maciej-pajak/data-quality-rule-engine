@@ -1,4 +1,4 @@
-package pl.pajak.dqr.rule.java;
+package pl.pajak.dqr.example.rules;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -18,9 +18,9 @@ import pl.pajak.dqr.engine.rule.Rule;
 import pl.pajak.dqr.engine.rule.RuleCatalog;
 import pl.pajak.dqr.engine.rule.RuleSeverity;
 import pl.pajak.dqr.engine.rule.RuleStatus;
-import pl.pajak.dqr.rule.java.testing.JsonPartnerRecords;
-import pl.pajak.dqr.rule.java.testing.ListRecordSource;
-import pl.pajak.dqr.rule.java.testing.RecordingSink;
+import pl.pajak.dqr.example.rules.testing.JsonPartnerRecords;
+import pl.pajak.dqr.example.rules.testing.ListRecordSource;
+import pl.pajak.dqr.example.rules.testing.RecordingSink;
 
 /**
  * The scenario from the task description, run end to end in one pass: the real engine over the real
