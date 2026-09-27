@@ -2,7 +2,7 @@ package pl.pajak.dqr.engine;
 
 import pl.pajak.dqr.engine.rule.Rule;
 
-class RuleMatcher {
+final class RuleMatcher {
 
   static boolean matches(RuleFilter filter, Rule rule) {
     return switch (filter) {

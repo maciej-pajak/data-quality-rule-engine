@@ -409,13 +409,13 @@ class RuleEngineTest {
           new RecordingSink() {
 
             @Override
-            public void onSuccess(RuleResult result) {
+            public void onResult(RuleResult result) {
               remainingAtEachResult.add(source.remainingRecords());
-              super.onSuccess(result);
+              super.onResult(result);
             }
           };
 
-      new RuleEngine()
+      RuleEngine.newInstance()
           .process(
               EngineInput.builder(FakeRuleCatalog.of(TestRule.of("rule-1")), source, observingSink)
                   .withBatchSize(1)
@@ -460,6 +460,6 @@ class RuleEngineTest {
       FakeRecordSource source,
       UnaryOperator<EngineInput.Builder> configure) {
     final var builder = configure.apply(EngineInput.builder(catalog, source, sink));
-    return new RuleEngine().process(builder.build());
+    return RuleEngine.newInstance().process(builder.build());
   }
 }

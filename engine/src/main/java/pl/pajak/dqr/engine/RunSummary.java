@@ -4,23 +4,42 @@ import java.util.Map;
 import pl.pajak.dqr.engine.rule.RuleSeverity;
 
 /**
- * An immutable snapshot of what a finished run produced.
+ * What a finished run produced, returned by {@link RuleEngineImpl#process(EngineInput)}.
  *
  * <p>The counters are per result, not per record: one record evaluated by three rules contributes
- * three results. Counting distinct records would require remembering every reference seen, which a
- * run over an unbounded source cannot afford.
+ * three results. The number of distinct records is not reported, as a run over an unbounded source
+ * cannot keep every identifier it has seen.
+ *
+ * <p>The summary carries counts only; the outcomes themselves reach the caller through its {@link
+ * RuleResultSink} while the run proceeds. Instances are immutable.
  */
 public sealed interface RunSummary permits RunSummaryImpl {
 
-  /** Number of results handed to {@link RuleResultSink#onSuccess(RuleResult)}. */
+  /**
+   * Returns how many results the run produced.
+   *
+   * @return the number of calls made to {@link RuleResultSink#onResult(RuleResult)}
+   */
   int resultsCount();
 
-  /** Number of errors handed to {@link RuleResultSink#onError(RuleError)}. */
+  /**
+   * Returns how many rule failures the run produced.
+   *
+   * @return the number of calls made to {@link RuleResultSink#onError(RuleError)}
+   */
   int errorsCount();
 
-  /** Result counts per decision. Decisions that never occurred are absent. */
+  /**
+   * Returns the result counts broken down by decision.
+   *
+   * @return an unmodifiable map of decision to count; a decision that never occurred is absent
+   */
   Map<Decision, Integer> resultsCountByDecision();
 
-  /** Result counts per severity of the rule that produced them. Unused severities are absent. */
+  /**
+   * Returns the result counts broken down by the severity of the rule that produced them.
+   *
+   * @return an unmodifiable map of severity to count; a severity that never occurred is absent
+   */
   Map<RuleSeverity, Integer> resultsCountBySeverity();
 }

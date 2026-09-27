@@ -13,7 +13,7 @@ import pl.pajak.dqr.engine.rule.RuleSeverity;
  *
  * <p>Not thread safe; a run evaluates rules on the calling thread.
  */
-class RulesRun {
+final class RulesRun {
 
   private final RuleResultSink resultSink;
   private final Map<Decision, Integer> resultsCountByDecision = new EnumMap<>(Decision.class);
@@ -33,7 +33,7 @@ class RulesRun {
 
   void onResult(RuleResult result) {
     countResult(result);
-    resultSink.onSuccess(result);
+    resultSink.onResult(result);
   }
 
   /** Reports a failure the rule detected itself. */

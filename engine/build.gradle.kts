@@ -20,6 +20,15 @@ tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.addAll(listOf("-Xlint:all", "-Werror"))
 }
 
+tasks.compileJava {
+    options.compilerArgs.addAll(
+        listOf(
+            "-Xdoclint:all/protected",
+            "-Xdoclint/package:pl.pajak.dqr.engine,pl.pajak.dqr.engine.rule",
+        )
+    )
+}
+
 dependencies {
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)

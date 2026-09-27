@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-class ObservedPartnerRecord implements PartnerRecord {
+final class ObservedPartnerRecord implements PartnerRecord {
 
   private final PartnerRecord delegate;
   private final Map<String, String> accessedFields = new LinkedHashMap<>();
