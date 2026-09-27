@@ -1,6 +1,7 @@
 [versions]
 assertj = "3.27.3"
 googleJavaFormat = "1.25.2"
+jackson = "2.18.2"
 junit = "5.11.4"
 spotless = "7.0.2"
 springBoot = "3.5.6"
@@ -8,6 +9,7 @@ springdoc = "2.8.9"
 
 [libraries]
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }

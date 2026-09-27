@@ -23,6 +23,10 @@ tasks.withType<JavaCompile>().configureEach {
 dependencies {
     api(project(":engine"))
 
+    // Rule metadata is data on disk; Jackson binds it to records and stays an
+    // implementation detail of this module. It never reaches the engine's API.
+    implementation(libs.jackson.dataformat.yaml)
+
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.assertj.core)

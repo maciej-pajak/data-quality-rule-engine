@@ -1,0 +1,16 @@
+# Decision mappings for the rules of JavaRuleCatalog. Data, not code: a rule's
+# computed value is looked up here, and `default-decision` covers the values the
+# table does not list. Omitting `default-decision` leaves such values unmapped.
+decision-mappings:
+  countryBlocked:
+    decision-by-value:
+      blocked: INVALID
+    default-decision: NOT_APPLICABLE
+  vatFormat:
+    decision-by-value:
+      ok: VALID
+      bad: INVALID
+  ibanFormat:
+    decision-by-value:
+      ok: VALID
+      bad: INVALID
