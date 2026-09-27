@@ -43,12 +43,12 @@ final class RulesRun {
 
   /** Reports a failure the engine detected while turning a computed value into a decision. */
   void onFailure(Rule rule, PartnerRecord record, String message) {
-    onFailure(new RuleErrorImpl(record.refId(), rule.id(), message, null));
+    onFailure(new RuleErrorImpl(record.refId(), rule.id(), rule.label(), message, null));
   }
 
   /** Reports a failure a rule threw out of. */
   void onFailure(Rule rule, PartnerRecord record, Throwable cause) {
-    onFailure(new RuleErrorImpl(record.refId(), rule.id(), describe(cause), cause));
+    onFailure(new RuleErrorImpl(record.refId(), rule.id(), rule.label(), describe(cause), cause));
   }
 
   private void onFailure(RuleError error) {

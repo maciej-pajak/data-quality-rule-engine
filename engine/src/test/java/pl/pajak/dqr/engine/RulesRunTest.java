@@ -57,13 +57,14 @@ class RulesRunTest {
   @Test
   void reportedFailureLocatesRuleAndRecord() {
     run.onFailure(
-        TestRule.of("rule-1"),
+        TestRule.builder("rule-1").withLabel("Rule 1").build(),
         TestRecord.of("r-1"),
         new ComputationResult.ComputationError("no country code"));
 
     assertThat(sink.errors()).hasSize(1);
     final var error = sink.errors().getFirst();
     assertThat(error.ruleId()).isEqualTo("rule-1");
+    assertThat(error.ruleLabel()).isEqualTo("Rule 1");
     assertThat(error.recordRefId()).isEqualTo("r-1");
     assertThat(error.message()).isEqualTo("no country code");
     assertThat(error.cause()).isEmpty();

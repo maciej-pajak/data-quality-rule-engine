@@ -11,36 +11,37 @@ class RuleErrorImplTest {
   @Test
   void rejectsAMissingRecordRefId() {
     assertThatNullPointerException()
-        .isThrownBy(() -> new RuleErrorImpl(null, "rule-1", "message", null));
+        .isThrownBy(() -> new RuleErrorImpl(null, "rule-1", "Rule 1", "message", null));
     assertThatIllegalArgumentException()
-        .isThrownBy(() -> new RuleErrorImpl(" ", "rule-1", "message", null));
+        .isThrownBy(() -> new RuleErrorImpl(" ", "rule-1", "Rule 1", "message", null));
   }
 
   @Test
   void rejectsAMissingRuleId() {
     assertThatNullPointerException()
-        .isThrownBy(() -> new RuleErrorImpl("r-1", null, "message", null));
+        .isThrownBy(() -> new RuleErrorImpl("r-1", null, "Rule 1", "message", null));
     assertThatIllegalArgumentException()
-        .isThrownBy(() -> new RuleErrorImpl("r-1", "", "message", null));
+        .isThrownBy(() -> new RuleErrorImpl("r-1", "", "Rule 1", "message", null));
   }
 
   @Test
   void rejectsABlankMessageSoAnErrorAlwaysDescribesItself() {
     assertThatNullPointerException()
-        .isThrownBy(() -> new RuleErrorImpl("r-1", "rule-1", null, null));
+        .isThrownBy(() -> new RuleErrorImpl("r-1", "rule-1", "Rule 1", null, null));
     assertThatIllegalArgumentException()
-        .isThrownBy(() -> new RuleErrorImpl("r-1", "rule-1", "\t", null));
+        .isThrownBy(() -> new RuleErrorImpl("r-1", "rule-1", "Rule 1", "\t", null));
   }
 
   @Test
   void reportsAnAbsentCauseAsAnEmptyOptional() {
-    assertThat(new RuleErrorImpl("r-1", "rule-1", "message", null).cause()).isEmpty();
+    assertThat(new RuleErrorImpl("r-1", "rule-1", "Rule 1", "message", null).cause()).isEmpty();
   }
 
   @Test
   void reportsThePresentCause() {
     final var cause = new IllegalStateException("boom");
 
-    assertThat(new RuleErrorImpl("r-1", "rule-1", "message", cause).cause()).containsSame(cause);
+    assertThat(new RuleErrorImpl("r-1", "rule-1", "Rule 1", "message", cause).cause())
+        .containsSame(cause);
   }
 }

@@ -28,6 +28,16 @@ public sealed interface RuleError permits RuleErrorImpl {
   String ruleId();
 
   /**
+   * Returns the human-readable name of the rule that failed.
+   *
+   * <p>Carried with the failure so that a report can name the rule without consulting the catalog
+   * again. It is a property of the rule, not of this failure.
+   *
+   * @return the rule's label, as reported by {@link pl.pajak.dqr.engine.rule.Rule#label()}
+   */
+  String ruleLabel();
+
+  /**
    * Returns a human-readable description of the failure.
    *
    * <p>For a failure the rule threw, the description is derived from the exception's type and

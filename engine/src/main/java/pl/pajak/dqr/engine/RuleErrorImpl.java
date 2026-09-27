@@ -7,7 +7,8 @@ import java.util.Optional;
  * The cause is held as a plain reference and may be {@code null}; {@link #cause()} is what the API
  * exposes, so the {@link Optional} stays on the boundary instead of becoming a field.
  */
-record RuleErrorImpl(String recordRefId, String ruleId, String message, Throwable causeOrNull)
+record RuleErrorImpl(
+    String recordRefId, String ruleId, String ruleLabel, String message, Throwable causeOrNull)
     implements RuleError {
 
   RuleErrorImpl {
