@@ -9,8 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import pl.pajak.rule.engine.Decision;
-import pl.pajak.rule.engine.rule.DecisionMapping;
+import pl.pajak.dqr.engine.Decision;
+import pl.pajak.dqr.engine.rule.DecisionMapping;
 
 /**
  * Decision mappings read from a YAML document, keyed by rule id.

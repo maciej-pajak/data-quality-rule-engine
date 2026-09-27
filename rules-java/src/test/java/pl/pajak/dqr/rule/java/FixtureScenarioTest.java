@@ -11,16 +11,16 @@ import org.junit.jupiter.api.Test;
 import pl.pajak.dqr.rule.java.testing.JsonPartnerRecords;
 import pl.pajak.dqr.rule.java.testing.ListRecordSource;
 import pl.pajak.dqr.rule.java.testing.RecordingSink;
-import pl.pajak.rule.engine.Decision;
-import pl.pajak.rule.engine.EngineInput;
-import pl.pajak.rule.engine.RuleEngine;
-import pl.pajak.rule.engine.RuleError;
-import pl.pajak.rule.engine.RuleResult;
-import pl.pajak.rule.engine.rule.ComputationResult;
-import pl.pajak.rule.engine.rule.Rule;
-import pl.pajak.rule.engine.rule.RuleCatalog;
-import pl.pajak.rule.engine.rule.RuleSeverity;
-import pl.pajak.rule.engine.rule.RuleStatus;
+import pl.pajak.dqr.engine.Decision;
+import pl.pajak.dqr.engine.EngineInput;
+import pl.pajak.dqr.engine.RuleEngine;
+import pl.pajak.dqr.engine.RuleError;
+import pl.pajak.dqr.engine.RuleResult;
+import pl.pajak.dqr.engine.rule.ComputationResult;
+import pl.pajak.dqr.engine.rule.Rule;
+import pl.pajak.dqr.engine.rule.RuleCatalog;
+import pl.pajak.dqr.engine.rule.RuleSeverity;
+import pl.pajak.dqr.engine.rule.RuleStatus;
 
 /**
  * The scenario from the task description, run end to end in one pass: the real engine over the real

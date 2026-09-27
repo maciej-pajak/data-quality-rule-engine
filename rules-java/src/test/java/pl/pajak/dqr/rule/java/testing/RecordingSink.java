@@ -2,9 +2,9 @@ package pl.pajak.dqr.rule.java.testing;
 
 import java.util.ArrayList;
 import java.util.List;
-import pl.pajak.rule.engine.RuleError;
-import pl.pajak.rule.engine.RuleResult;
-import pl.pajak.rule.engine.RuleResultSink;
+import pl.pajak.dqr.engine.RuleError;
+import pl.pajak.dqr.engine.RuleResult;
+import pl.pajak.dqr.engine.RuleResultSink;
 
 /** A sink that keeps everything it was handed, in the order it arrived. */
 public final class RecordingSink implements RuleResultSink {

@@ -4,8 +4,8 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import pl.pajak.rule.engine.PartnerRecord;
-import pl.pajak.rule.engine.PartnerRecordSource;
+import pl.pajak.dqr.engine.PartnerRecord;
+import pl.pajak.dqr.engine.PartnerRecordSource;
 
 /** A finite source that hands out a fixed list of records in batches, then stays empty. */
 public final class ListRecordSource implements PartnerRecordSource {

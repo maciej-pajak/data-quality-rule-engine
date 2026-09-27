@@ -3,8 +3,8 @@ package pl.pajak.dqr.rule.java;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import pl.pajak.rule.engine.Decision;
-import pl.pajak.rule.engine.rule.DecisionMapping;
+import pl.pajak.dqr.engine.Decision;
+import pl.pajak.dqr.engine.rule.DecisionMapping;
 
 /**
  * A decision mapping that is pure data: a value → decision table plus an optional fallback for

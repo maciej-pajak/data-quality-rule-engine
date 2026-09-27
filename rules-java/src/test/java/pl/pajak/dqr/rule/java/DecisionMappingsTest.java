@@ -7,8 +7,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
-import pl.pajak.rule.engine.Decision;
-import pl.pajak.rule.engine.rule.DecisionMapping;
+import pl.pajak.dqr.engine.Decision;
+import pl.pajak.dqr.engine.rule.DecisionMapping;
 
 class DecisionMappingsTest {
 

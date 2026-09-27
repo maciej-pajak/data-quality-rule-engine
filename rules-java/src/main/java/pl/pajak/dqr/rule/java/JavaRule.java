@@ -2,12 +2,12 @@ package pl.pajak.dqr.rule.java;
 
 import java.util.List;
 import java.util.Optional;
-import pl.pajak.rule.engine.rule.CountryScope;
-import pl.pajak.rule.engine.rule.DecisionMapping;
-import pl.pajak.rule.engine.rule.Rule;
-import pl.pajak.rule.engine.rule.RuleSeverity;
-import pl.pajak.rule.engine.rule.RuleStatus;
-import pl.pajak.rule.engine.rule.ValueLogic;
+import pl.pajak.dqr.engine.rule.CountryScope;
+import pl.pajak.dqr.engine.rule.DecisionMapping;
+import pl.pajak.dqr.engine.rule.Rule;
+import pl.pajak.dqr.engine.rule.RuleSeverity;
+import pl.pajak.dqr.engine.rule.RuleStatus;
+import pl.pajak.dqr.engine.rule.ValueLogic;
 
 public record JavaRule(
     String id,

@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import pl.pajak.rule.engine.PartnerRecord;
+import pl.pajak.dqr.engine.PartnerRecord;
 
 /**
  * Partner records read from a JSON array of flat objects, the shape the task description uses.
