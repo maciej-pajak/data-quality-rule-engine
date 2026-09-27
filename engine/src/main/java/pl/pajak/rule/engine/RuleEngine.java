@@ -47,11 +47,12 @@ public class RuleEngine {
           .forEach(
               partnerRecord -> {
                 try {
-                  ComputationResult result = rule.logic().compute(partnerRecord);
+                  ObservedPartnerRecord observedRecord = new ObservedPartnerRecord(partnerRecord);
+                  ComputationResult result = rule.logic().compute(observedRecord);
 
                   switch (result) {
                     case ComputationResult.ComputedValue value ->
-                        decide(rule, partnerRecord, value, validationRun);
+                        decide(rule, observedRecord, value, validationRun);
                     case ComputationResult.ComputationError error ->
                         validationRun.onFailure(rule, partnerRecord, error);
                   }
@@ -65,7 +66,7 @@ public class RuleEngine {
   private Predicate<PartnerRecord> matchesCountry(Rule rule) {
     final var countryScope = rule.countryScope().orElse(CountryScope.World);
     return record ->
-        countryScope == CountryScope.World || countryScope.equals(record.getCountry().orElse(null));
+        countryScope.equals(CountryScope.World) || countryScope.equals(record.getCountry().orElse(null));
   }
 
   /**
@@ -75,7 +76,7 @@ public class RuleEngine {
    */
   private void decide(
       Rule rule,
-      PartnerRecord partnerRecord,
+      ObservedPartnerRecord partnerRecord,
       ComputationResult.ComputedValue value,
       RulesRun validationRun) {
     switch (rule.decisionMapping().decisionOf(value.value())) {
@@ -93,7 +94,7 @@ public class RuleEngine {
 
   private RuleResult resultOf(
       Rule rule,
-      PartnerRecord partnerRecord,
+      ObservedPartnerRecord partnerRecord,
       ComputationResult.ComputedValue value,
       DecisionMapping.Resolution.Resolved resolved) {
     return new RuleResultImpl(
@@ -102,8 +103,6 @@ public class RuleEngine {
         resolved.decision(),
         rule.severity(),
         new RuleResultImpl.ProvenanceImpl(
-            value.value(),
-            resolved.description(),
-            null)); // TODO: the fields the logic read are not tracked yet
+            value.value(), resolved.description(), partnerRecord.getAccessedFields()));
   }
 }
