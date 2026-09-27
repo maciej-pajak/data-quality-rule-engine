@@ -2,31 +2,23 @@ package pl.pajak.rule.engine.testing;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 import pl.pajak.rule.engine.PartnerRecord;
-import pl.pajak.rule.engine.rule.CountryScope;
 
-/** A partner record assembled for a test: a reference, an optional country and flat text fields. */
-public record TestRecord(String refId, Optional<CountryScope> country, Map<String, String> fields)
-    implements PartnerRecord {
+/** A partner record assembled for a test: a reference and flat text fields. */
+public record TestRecord(String refId, Map<String, String> fields) implements PartnerRecord {
 
-  /** A record that belongs to no country and carries no fields. */
+  /** A record that carries no fields, not even a country. */
   public static PartnerRecord of(String refId) {
-    return new TestRecord(refId, Optional.empty(), Map.of());
+    return new TestRecord(refId, Map.of());
   }
 
-  /** A record scoped to one country code. */
+  /** A record whose country field holds one country code. */
   public static PartnerRecord inCountry(String refId, String countryCode) {
-    return new TestRecord(refId, Optional.of(new CountryScope.Country(countryCode)), Map.of());
+    return new TestRecord(refId, Map.of("country", countryCode));
   }
 
   public static Builder builder(String refId) {
     return new Builder(refId);
-  }
-
-  @Override
-  public Optional<CountryScope> getCountry() {
-    return country;
   }
 
   @Override
@@ -39,15 +31,12 @@ public record TestRecord(String refId, Optional<CountryScope> country, Map<Strin
     private final String refId;
     private final Map<String, String> fields = new LinkedHashMap<>();
 
-    private Optional<CountryScope> country = Optional.empty();
-
     private Builder(String refId) {
       this.refId = refId;
     }
 
     public Builder inCountry(String countryCode) {
-      this.country = Optional.of(new CountryScope.Country(countryCode));
-      return this;
+      return withField("country", countryCode);
     }
 
     public Builder withField(String name, String value) {
@@ -56,7 +45,7 @@ public record TestRecord(String refId, Optional<CountryScope> country, Map<Strin
     }
 
     public PartnerRecord build() {
-      return new TestRecord(refId, country, Map.copyOf(fields));
+      return new TestRecord(refId, Map.copyOf(fields));
     }
   }
 }

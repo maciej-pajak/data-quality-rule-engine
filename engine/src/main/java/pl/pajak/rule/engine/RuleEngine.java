@@ -1,13 +1,15 @@
 package pl.pajak.rule.engine;
 
 import java.util.List;
-import java.util.function.Predicate;
 import pl.pajak.rule.engine.rule.ComputationResult;
 import pl.pajak.rule.engine.rule.CountryScope;
 import pl.pajak.rule.engine.rule.DecisionMapping;
 import pl.pajak.rule.engine.rule.Rule;
 
 public class RuleEngine {
+
+  /** The record field the engine reads to match a rule scoped to one country. */
+  private static final String COUNTRY_FIELD = "country";
 
   public RuleEngine() {}
 
@@ -42,32 +44,37 @@ public class RuleEngine {
   private void evaluate(List<PartnerRecord> batch, List<Rule> rules, RulesRun validationRun) {
 
     for (Rule rule : rules) {
-      batch.stream()
-          .filter(matchesCountry(rule))
-          .forEach(
-              partnerRecord -> {
-                try {
-                  ObservedPartnerRecord observedRecord = new ObservedPartnerRecord(partnerRecord);
-                  ComputationResult result = rule.logic().compute(observedRecord);
+      for (PartnerRecord partnerRecord : batch) {
+        try {
+          if (!appliesTo(rule, partnerRecord)) {
+            continue;
+          }
 
-                  switch (result) {
-                    case ComputationResult.ComputedValue value ->
-                        decide(rule, observedRecord, value, validationRun);
-                    case ComputationResult.ComputationError error ->
-                        validationRun.onFailure(rule, partnerRecord, error);
-                  }
-                } catch (Exception ex) {
-                  validationRun.onFailure(rule, partnerRecord, ex);
-                }
-              });
+          ObservedPartnerRecord observedRecord = new ObservedPartnerRecord(partnerRecord);
+          ComputationResult result = rule.logic().compute(observedRecord);
+
+          switch (result) {
+            case ComputationResult.ComputedValue value ->
+                decide(rule, observedRecord, value, validationRun);
+            case ComputationResult.ComputationError error ->
+                validationRun.onFailure(rule, partnerRecord, error);
+          }
+        } catch (Exception ex) {
+          validationRun.onFailure(rule, partnerRecord, ex);
+        }
+      }
     }
   }
 
-  private Predicate<PartnerRecord> matchesCountry(Rule rule) {
-    final var countryScope = rule.countryScope().orElse(CountryScope.World);
-    return record ->
-        countryScope.equals(CountryScope.World)
-            || countryScope.equals(record.getCountry().orElse(null));
+  /**
+   * Whether a rule's country scope covers a record. The record's country is an ordinary field, so a
+   * record that carries none is only covered by a world wide rule.
+   */
+  private boolean appliesTo(Rule rule, PartnerRecord record) {
+    return switch (rule.countryScope().orElse(CountryScope.World)) {
+      case CountryScope.World ignored -> true;
+      case CountryScope.Country(String code) -> code.equals(record.getField(COUNTRY_FIELD));
+    };
   }
 
   /**

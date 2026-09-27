@@ -3,13 +3,11 @@ package pl.pajak.dqr.rule.java;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
-import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import pl.pajak.rule.engine.Decision;
 import pl.pajak.rule.engine.PartnerRecord;
 import pl.pajak.rule.engine.rule.ComputationResult;
-import pl.pajak.rule.engine.rule.CountryScope;
 import pl.pajak.rule.engine.rule.DecisionMapping;
 import pl.pajak.rule.engine.rule.Rule;
 
@@ -109,11 +107,6 @@ class JavaRuleCatalogTest {
     @Override
     public String refId() {
       return "test-record";
-    }
-
-    @Override
-    public Optional<CountryScope> getCountry() {
-      return Optional.ofNullable(fields.get("country")).map(CountryScope.Country::new);
     }
 
     @Override

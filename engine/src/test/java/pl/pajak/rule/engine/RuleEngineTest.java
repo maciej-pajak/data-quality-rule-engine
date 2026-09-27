@@ -169,6 +169,49 @@ class RuleEngineTest {
     }
 
     @Test
+    void theCountryIsReadAsAnOrdinaryField() {
+      final var rule =
+          TestRule.builder("rule-1").withCountryScope(new CountryScope.Country("PL")).build();
+      final var records =
+          FakeRecordSource.of(
+              TestRecord.builder("pl-record").withField("country", "PL").build(),
+              TestRecord.builder("de-record").withField("country", "DE").build());
+
+      run(FakeRuleCatalog.of(rule), records);
+
+      assertThat(sink.results()).extracting(RuleResult::recordRefId).containsExactly("pl-record");
+    }
+
+    @Test
+    void aRecordThatFailsToAnswerItsCountryIsReportedWithoutStoppingTheBatch() {
+      final var rule =
+          TestRule.builder("rule-1").withCountryScope(new CountryScope.Country("PL")).build();
+      final PartnerRecord unreadable =
+          new PartnerRecord() {
+
+            @Override
+            public String refId() {
+              return "unreadable-record";
+            }
+
+            @Override
+            public String getField(String name) {
+              throw new IllegalStateException("record is unreadable");
+            }
+          };
+      final var records = FakeRecordSource.of(unreadable, TestRecord.inCountry("pl-record", "PL"));
+
+      final var summary = run(FakeRuleCatalog.of(rule), records);
+
+      assertThat(sink.results()).extracting(RuleResult::recordRefId).containsExactly("pl-record");
+      assertThat(sink.errors())
+          .extracting(RuleError::recordRefId, RuleError::message)
+          .containsExactly(
+              tuple("unreadable-record", "java.lang.IllegalStateException: record is unreadable"));
+      assertThat(summary.errorsCount()).isEqualTo(1);
+    }
+
+    @Test
     void aWorldScopeCreatedByTheCallerIsStillWorldWide() {
       final var rule =
           TestRule.builder("rule-1").withCountryScope(new CountryScope.World()).build();
