@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import pl.pajak.rule.engine.Decision;
 import pl.pajak.rule.engine.PartnerRecord;
-import pl.pajak.rule.engine.PartnerRecordVisitor;
 import pl.pajak.rule.engine.rule.ComputationResult;
 import pl.pajak.rule.engine.rule.CountryScope;
 import pl.pajak.rule.engine.rule.DecisionMapping;
@@ -115,11 +114,6 @@ class JavaRuleCatalogTest {
     @Override
     public Optional<CountryScope> getCountry() {
       return Optional.ofNullable(fields.get("country")).map(CountryScope.Country::new);
-    }
-
-    @Override
-    public void read(PartnerRecordVisitor visitor) {
-      throw new UnsupportedOperationException();
     }
 
     @Override

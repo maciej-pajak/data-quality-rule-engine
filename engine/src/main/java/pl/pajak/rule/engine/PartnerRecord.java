@@ -9,7 +9,5 @@ public interface PartnerRecord {
 
   Optional<CountryScope> getCountry();
 
-  void read(PartnerRecordVisitor visitor);
-
   String getField(String name);
 }

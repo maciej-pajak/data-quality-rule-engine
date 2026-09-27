@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import pl.pajak.rule.engine.PartnerRecord;
-import pl.pajak.rule.engine.PartnerRecordVisitor;
 import pl.pajak.rule.engine.rule.CountryScope;
 
 /** A partner record assembled for a test: a reference, an optional country and flat text fields. */
@@ -28,11 +27,6 @@ public record TestRecord(String refId, Optional<CountryScope> country, Map<Strin
   @Override
   public Optional<CountryScope> getCountry() {
     return country;
-  }
-
-  @Override
-  public void read(PartnerRecordVisitor visitor) {
-    fields.forEach(visitor::text);
   }
 
   @Override

@@ -25,11 +25,6 @@ class ObservedPartnerRecord implements PartnerRecord {
   }
 
   @Override
-  public void read(PartnerRecordVisitor visitor) {
-    delegate.read(visitor);
-  }
-
-  @Override
   public String getField(String name) {
     String value = delegate.getField(name);
     accessedFields.put(name, value);

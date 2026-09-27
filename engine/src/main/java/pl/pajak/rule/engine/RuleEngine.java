@@ -66,7 +66,8 @@ public class RuleEngine {
   private Predicate<PartnerRecord> matchesCountry(Rule rule) {
     final var countryScope = rule.countryScope().orElse(CountryScope.World);
     return record ->
-        countryScope.equals(CountryScope.World) || countryScope.equals(record.getCountry().orElse(null));
+        countryScope.equals(CountryScope.World)
+            || countryScope.equals(record.getCountry().orElse(null));
   }
 
   /**
