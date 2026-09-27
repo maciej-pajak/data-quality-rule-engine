@@ -51,7 +51,7 @@ public class RuleEngine {
 
                   switch (result) {
                     case ComputationResult.ComputedValue value ->
-                        validationRun.onResult(resultOf(rule, partnerRecord, value));
+                        decide(rule, partnerRecord, value, validationRun);
                     case ComputationResult.ComputationError error ->
                         validationRun.onFailure(rule, partnerRecord, error);
                   }
@@ -68,24 +68,42 @@ public class RuleEngine {
         countryScope == CountryScope.World || countryScope.equals(record.getCountry().orElse(null));
   }
 
+  /**
+   * Turns a computed value into a result, or into an error when the rule's mapping covers neither
+   * the value nor a default. An unmapped value depends on the record, so it is reported per record
+   * rather than aborting the run.
+   */
+  private void decide(
+      Rule rule,
+      PartnerRecord partnerRecord,
+      ComputationResult.ComputedValue value,
+      RulesRun validationRun) {
+    switch (rule.decisionMapping().decisionOf(value.value())) {
+      case DecisionMapping.Resolution.Resolved resolved ->
+          validationRun.onResult(resultOf(rule, partnerRecord, value, resolved));
+      case DecisionMapping.Resolution.Unmapped unmapped ->
+          validationRun.onFailure(
+              rule,
+              partnerRecord,
+              "computed value \""
+                  + unmapped.value()
+                  + "\" is not mapped and the rule declares no default decision");
+    }
+  }
+
   private RuleResult resultOf(
-      Rule rule, PartnerRecord partnerRecord, ComputationResult.ComputedValue value) {
-    final var decision =
-        switch (rule.decisionMapping().decisionOf(value.value())) {
-          case DecisionMapping.Resolution.Matched matched -> matched.decision();
-          case DecisionMapping.Resolution.Defaulted defaulted -> defaulted.decision();
-          case DecisionMapping.Resolution.Unmapped unmapped ->
-              throw new IllegalStateException(
-                  "Unexpected decision mapping resolution: " + unmapped); // TODO
-        };
+      Rule rule,
+      PartnerRecord partnerRecord,
+      ComputationResult.ComputedValue value,
+      DecisionMapping.Resolution.Resolved resolved) {
     return new RuleResultImpl(
         partnerRecord.refId(),
         rule.id(),
-        decision,
+        resolved.decision(),
         rule.severity(),
         new RuleResultImpl.ProvenanceImpl(
             value.value(),
-            null, // TODO
-            null));
+            resolved.description(),
+            null)); // TODO: the fields the logic read are not tracked yet
   }
 }

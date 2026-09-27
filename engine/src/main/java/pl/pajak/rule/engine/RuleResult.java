@@ -5,7 +5,7 @@ import pl.pajak.rule.engine.rule.RuleSeverity;
 
 public sealed interface RuleResult permits RuleResultImpl {
 
-  String recordRefIf();
+  String recordRefId();
 
   String ruleId();
 

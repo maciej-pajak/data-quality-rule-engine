@@ -38,7 +38,12 @@ class RulesRun {
 
   /** Reports a failure the rule detected itself. */
   void onFailure(Rule rule, PartnerRecord record, ComputationResult.ComputationError error) {
-    onFailure(new RuleErrorImpl(record.refId(), rule.id(), error.message(), null));
+    onFailure(rule, record, error.message());
+  }
+
+  /** Reports a failure the engine detected while turning a computed value into a decision. */
+  void onFailure(Rule rule, PartnerRecord record, String message) {
+    onFailure(new RuleErrorImpl(record.refId(), rule.id(), message, null));
   }
 
   /** Reports a failure a rule threw out of. */

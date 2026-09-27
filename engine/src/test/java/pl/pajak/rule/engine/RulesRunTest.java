@@ -25,7 +25,7 @@ class RulesRunTest {
     run.onResult(result("r-1", Decision.VALID, RuleSeverity.ERROR));
     run.onResult(result("r-2", Decision.INVALID, RuleSeverity.WARNING));
 
-    assertThat(sink.results).extracting(RuleResult::recordRefIf).containsExactly("r-1", "r-2");
+    assertThat(sink.results).extracting(RuleResult::recordRefId).containsExactly("r-1", "r-2");
   }
 
   @Test

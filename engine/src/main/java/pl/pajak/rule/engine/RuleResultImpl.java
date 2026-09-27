@@ -4,7 +4,7 @@ import java.util.Map;
 import pl.pajak.rule.engine.rule.RuleSeverity;
 
 record RuleResultImpl(
-    String recordRefIf,
+    String recordRefId,
     String ruleId,
     Decision decision,
     RuleSeverity severity,
