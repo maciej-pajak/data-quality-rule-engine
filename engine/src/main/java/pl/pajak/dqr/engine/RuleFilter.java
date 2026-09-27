@@ -59,22 +59,29 @@ public sealed interface RuleFilter {
   /**
    * Returns a filter that matches a rule only when all the given filters match.
    *
+   * <p>Named apart from the instance {@link #and(RuleFilter)} on purpose: a static and an instance
+   * overload of one name cannot both be a method reference target, so {@code RuleFilter::and} would
+   * not compile.
+   *
    * @param filters the filters to combine; at least two
    * @return the conjunction of the filters
    * @throws IllegalArgumentException if fewer than two filters are given
    */
-  static RuleFilter and(RuleFilter... filters) {
+  static RuleFilter allOf(RuleFilter... filters) {
     return new RuleFilter.And(RuleFilter.of(filters));
   }
 
   /**
    * Returns a filter that matches a rule when at least one of the given filters matches.
    *
+   * <p>Named apart from the instance {@link #or(RuleFilter)} on purpose: see {@link
+   * #allOf(RuleFilter...)}.
+   *
    * @param filters the filters to combine; at least two
    * @return the disjunction of the filters
    * @throws IllegalArgumentException if fewer than two filters are given
    */
-  static RuleFilter or(RuleFilter... filters) {
+  static RuleFilter anyOf(RuleFilter... filters) {
     return new RuleFilter.Or(RuleFilter.of(filters));
   }
 
@@ -141,7 +148,8 @@ public sealed interface RuleFilter {
   record Category(String category) implements RuleFilter {}
 
   /**
-   * Matches rules that all its filters match. Obtained from {@link RuleFilter#and(RuleFilter...)}.
+   * Matches rules that all its filters match. Obtained from {@link
+   * RuleFilter#allOf(RuleFilter...)}.
    *
    * @param filters the combined filters; at least two
    */
@@ -162,7 +170,7 @@ public sealed interface RuleFilter {
 
   /**
    * Matches rules that at least one of its filters matches. Obtained from {@link
-   * RuleFilter#or(RuleFilter...)}.
+   * RuleFilter#anyOf(RuleFilter...)}.
    *
    * @param filters the combined filters; at least two
    */

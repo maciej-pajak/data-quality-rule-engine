@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import pl.pajak.dqr.engine.rule.RuleStatus;
@@ -49,14 +50,14 @@ class RuleFilterTest {
   class Combination {
 
     @Test
-    void andKeepsItsOperandsInOrder() {
-      assertThat(RuleFilter.and(RELEASED, ADDRESS, TAX))
+    void allOfKeepsItsOperandsInOrder() {
+      assertThat(RuleFilter.allOf(RELEASED, ADDRESS, TAX))
           .isEqualTo(new RuleFilter.And(List.of(RELEASED, ADDRESS, TAX)));
     }
 
     @Test
-    void orKeepsItsOperandsInOrder() {
-      assertThat(RuleFilter.or(RELEASED, ADDRESS, TAX))
+    void anyOfKeepsItsOperandsInOrder() {
+      assertThat(RuleFilter.anyOf(RELEASED, ADDRESS, TAX))
           .isEqualTo(new RuleFilter.Or(List.of(RELEASED, ADDRESS, TAX)));
     }
 
@@ -73,22 +74,34 @@ class RuleFilterTest {
   }
 
   /**
-   * A conjunction or a disjunction of fewer than two filters says nothing, and the API leaves no
-   * way to build one by accident: a single-argument {@code RuleFilter.and(f)} resolves to the
-   * instance operator rather than the varargs factory, so only the empty call and the records
-   * themselves have to defend the invariant.
+   * A conjunction or a disjunction of fewer than two filters says nothing, so every way in defends
+   * the invariant: the varargs factories reach the records, and the records refuse the short list.
    */
   @Nested
   class NothingToCombine {
 
     @Test
-    void andRejectsNoOperandAtAll() {
-      assertThatIllegalArgumentException().isThrownBy(() -> RuleFilter.and());
+    void allOfRejectsNoOperandAtAll() {
+      assertThatIllegalArgumentException().isThrownBy(() -> RuleFilter.allOf());
     }
 
     @Test
-    void orRejectsNoOperandAtAll() {
-      assertThatIllegalArgumentException().isThrownBy(() -> RuleFilter.or());
+    void anyOfRejectsNoOperandAtAll() {
+      assertThatIllegalArgumentException().isThrownBy(() -> RuleFilter.anyOf());
+    }
+
+    @Test
+    void allOfRefusesASingleOperand() {
+      assertThatIllegalArgumentException()
+          .isThrownBy(() -> RuleFilter.allOf(RELEASED))
+          .withMessageContaining("at least 2");
+    }
+
+    @Test
+    void anyOfRefusesASingleOperand() {
+      assertThatIllegalArgumentException()
+          .isThrownBy(() -> RuleFilter.anyOf(RELEASED))
+          .withMessageContaining("at least 2");
     }
 
     @Test
@@ -118,12 +131,12 @@ class RuleFilterTest {
 
     @Test
     void andBuildsTheSameFilterAsTheFactory() {
-      assertThat(RELEASED.and(ADDRESS)).isEqualTo(RuleFilter.and(RELEASED, ADDRESS));
+      assertThat(RELEASED.and(ADDRESS)).isEqualTo(RuleFilter.allOf(RELEASED, ADDRESS));
     }
 
     @Test
     void orBuildsTheSameFilterAsTheFactory() {
-      assertThat(RELEASED.or(ADDRESS)).isEqualTo(RuleFilter.or(RELEASED, ADDRESS));
+      assertThat(RELEASED.or(ADDRESS)).isEqualTo(RuleFilter.anyOf(RELEASED, ADDRESS));
     }
 
     @Test
@@ -133,21 +146,34 @@ class RuleFilterTest {
 
     /**
      * Chaining nests rather than flattens: {@code a.and(b).and(c)} is a conjunction of two, the
-     * first of which is itself a conjunction, while {@code and(a, b, c)} is a conjunction of three.
-     * Both select the same rules, so the difference is one of shape only.
+     * first of which is itself a conjunction, while {@code allOf(a, b, c)} is a conjunction of
+     * three. Both select the same rules, so the difference is one of shape only.
      */
     @Test
     void chainingNestsRatherThanFlattens() {
       assertThat(RELEASED.and(ADDRESS).and(TAX))
           .isEqualTo(
               new RuleFilter.And(List.of(new RuleFilter.And(List.of(RELEASED, ADDRESS)), TAX)))
-          .isNotEqualTo(RuleFilter.and(RELEASED, ADDRESS, TAX));
+          .isNotEqualTo(RuleFilter.allOf(RELEASED, ADDRESS, TAX));
     }
 
     @Test
     void composeIntoTheFilterTheJavadocAdvertises() {
       assertThat(RELEASED.and(ADDRESS.or(TAX)))
-          .isEqualTo(RuleFilter.and(RELEASED, RuleFilter.or(ADDRESS, TAX)));
+          .isEqualTo(RuleFilter.allOf(RELEASED, RuleFilter.anyOf(ADDRESS, TAX)));
+    }
+
+    /**
+     * The operators serve as method references, which is why the varargs factories are named {@code
+     * allOf} and {@code anyOf}: a static and an instance overload sharing a name make {@code
+     * RuleFilter::or} ambiguous, and this folding of an unknown number of filters stops compiling.
+     */
+    @Test
+    void serveAsMethodReferencesForFolding() {
+      assertThat(Stream.of(RELEASED, ADDRESS, TAX).reduce(RuleFilter::or).orElseThrow())
+          .isEqualTo(RELEASED.or(ADDRESS).or(TAX));
+      assertThat(Stream.of(RELEASED, ADDRESS, TAX).reduce(RuleFilter::and).orElseThrow())
+          .isEqualTo(RELEASED.and(ADDRESS).and(TAX));
     }
   }
 }

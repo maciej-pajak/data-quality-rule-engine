@@ -83,7 +83,7 @@ class RuleMatcherTest {
     @Test
     void matchesWhenEveryOperandMatches() {
       RuleFilter filter =
-          RuleFilter.and(RuleFilter.category("address"), RuleFilter.status(RuleStatus.RELEASED));
+          RuleFilter.allOf(RuleFilter.category("address"), RuleFilter.status(RuleStatus.RELEASED));
 
       assertThat(RuleMatcher.matches(filter, RELEASED_ADDRESS_RULE)).isTrue();
     }
@@ -91,7 +91,7 @@ class RuleMatcherTest {
     @Test
     void doesNotMatchWhenOneOperandFails() {
       RuleFilter filter =
-          RuleFilter.and(RuleFilter.category("address"), RuleFilter.status(RuleStatus.DRAFT));
+          RuleFilter.allOf(RuleFilter.category("address"), RuleFilter.status(RuleStatus.DRAFT));
 
       assertThat(RuleMatcher.matches(filter, RELEASED_ADDRESS_RULE)).isFalse();
     }
@@ -103,7 +103,7 @@ class RuleMatcherTest {
     @Test
     void matchesWhenOneOperandMatches() {
       RuleFilter filter =
-          RuleFilter.or(RuleFilter.category("tax"), RuleFilter.status(RuleStatus.RELEASED));
+          RuleFilter.anyOf(RuleFilter.category("tax"), RuleFilter.status(RuleStatus.RELEASED));
 
       assertThat(RuleMatcher.matches(filter, RELEASED_ADDRESS_RULE)).isTrue();
     }
@@ -111,7 +111,7 @@ class RuleMatcherTest {
     @Test
     void doesNotMatchWhenNoOperandMatches() {
       RuleFilter filter =
-          RuleFilter.or(RuleFilter.category("tax"), RuleFilter.status(RuleStatus.DRAFT));
+          RuleFilter.anyOf(RuleFilter.category("tax"), RuleFilter.status(RuleStatus.DRAFT));
 
       assertThat(RuleMatcher.matches(filter, RELEASED_ADDRESS_RULE)).isFalse();
     }
@@ -148,8 +148,8 @@ class RuleMatcherTest {
   class Composition {
 
     private final RuleFilter filter =
-        RuleFilter.and(
-            RuleFilter.or(RuleFilter.category("address"), RuleFilter.category("tax")),
+        RuleFilter.allOf(
+            RuleFilter.anyOf(RuleFilter.category("address"), RuleFilter.category("tax")),
             RuleFilter.not(RuleFilter.status(RuleStatus.DEPRECATED)));
 
     @Test
