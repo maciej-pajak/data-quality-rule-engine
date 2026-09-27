@@ -31,6 +31,23 @@ catalog, and fault isolation is covered there too.
 
 This compiles every module, checks formatting with Spotless and runs the tests.
 
+## Tests
+
+```bash
+./gradlew test
+```
+
+Runs the test suites of every module without the Spotless and packaging steps.
+A single module, or a single test class, narrows it down:
+
+```bash
+./gradlew :engine:test
+./gradlew :examples:rules-catalog-java:test --tests '*FixtureScenarioTest'
+```
+
+Each module writes an HTML report to
+`<module>/build/reports/tests/test/index.html`.
+
 ## Design
 
 See [DESIGN.md](DESIGN.md) for the public API, fault isolation, bounded memory
