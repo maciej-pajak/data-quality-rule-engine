@@ -1,6 +1,7 @@
 package pl.pajak.rule.engine;
 
 import java.util.List;
+import java.util.function.Predicate;
 import pl.pajak.rule.engine.rule.ComputationResult;
 import pl.pajak.rule.engine.rule.CountryScope;
 import pl.pajak.rule.engine.rule.DecisionMapping;
@@ -41,11 +42,8 @@ public class RuleEngine {
   private void evaluate(List<PartnerRecord> batch, List<Rule> rules, RulesRun validationRun) {
 
     for (Rule rule : rules) {
-      final var countryScope = rule.countryScope().orElse(CountryScope.World);
-
       batch.stream()
-          .filter(
-              record -> countryScope.equals(record.getCountry().orElse(CountryScope.World))) // TODO
+          .filter(matchesCountry(rule))
           .forEach(
               partnerRecord -> {
                 try {
@@ -62,6 +60,12 @@ public class RuleEngine {
                 }
               });
     }
+  }
+
+  private Predicate<PartnerRecord> matchesCountry(Rule rule) {
+    final var countryScope = rule.countryScope().orElse(CountryScope.World);
+    return record ->
+        countryScope == CountryScope.World || countryScope.equals(record.getCountry().orElse(null));
   }
 
   private RuleResult resultOf(

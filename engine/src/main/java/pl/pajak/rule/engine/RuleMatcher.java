@@ -8,8 +8,6 @@ class RuleMatcher {
     return switch (filter) {
       case RuleFilter.All all -> true;
       case RuleFilter.Category category -> rule.categories().contains(category.category());
-      case RuleFilter.CountryScope countryScope ->
-          rule.countryScope().filter(countryScope.country()::equals).isPresent();
       case RuleFilter.Status status -> rule.status() == status.status();
       case RuleFilter.And and -> and.filters().stream().allMatch(f -> matches(f, rule));
       case RuleFilter.Not not -> !matches(not.filter(), rule);

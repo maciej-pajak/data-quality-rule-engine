@@ -10,31 +10,27 @@ public sealed interface RuleFilter {
     return Arrays.stream(filters).toList();
   }
 
-  public static RuleFilter all() {
+  static RuleFilter all() {
     return RuleFilter.All.INSTANCE;
   }
 
-  public static RuleFilter status(RuleStatus status) {
+  static RuleFilter status(RuleStatus status) {
     return new RuleFilter.Status(status);
   }
 
-  public static RuleFilter category(String category) {
+  static RuleFilter category(String category) {
     return new RuleFilter.Category(category);
   }
 
-  public static RuleFilter countryScope(String country) {
-    return new RuleFilter.CountryScope(country);
-  }
-
-  public static RuleFilter and(RuleFilter... filters) {
+  static RuleFilter and(RuleFilter... filters) {
     return new RuleFilter.And(RuleFilter.of(filters));
   }
 
-  public static RuleFilter or(RuleFilter... filters) {
+  static RuleFilter or(RuleFilter... filters) {
     return new RuleFilter.Or(RuleFilter.of(filters));
   }
 
-  public static RuleFilter not(RuleFilter filter) {
+  static RuleFilter not(RuleFilter filter) {
     return new RuleFilter.Not(filter);
   }
 
@@ -60,8 +56,6 @@ public sealed interface RuleFilter {
   record Status(RuleStatus status) implements RuleFilter {}
 
   record Category(String category) implements RuleFilter {}
-
-  record CountryScope(String country) implements RuleFilter {}
 
   record And(List<RuleFilter> filters) implements RuleFilter {
 
