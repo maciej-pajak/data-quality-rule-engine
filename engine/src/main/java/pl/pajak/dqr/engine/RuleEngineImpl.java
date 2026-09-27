@@ -24,13 +24,11 @@ final class RuleEngineImpl implements RuleEngine {
 
     final var run = new RulesRun(input.resultSink());
 
-    List<PartnerRecord> batch;
-    do {
-      // F1: The engine reads a batch of records
-      batch = recordSource.readNextBatch(input.batchSize());
-
+    for (List<PartnerRecord> batch = recordSource.readNextBatch(input.batchSize());
+        !batch.isEmpty();
+        batch = recordSource.readNextBatch(input.batchSize())) {
       evaluate(batch, rules, run);
-    } while (!batch.isEmpty());
+    }
 
     return run.getSummary();
   }
