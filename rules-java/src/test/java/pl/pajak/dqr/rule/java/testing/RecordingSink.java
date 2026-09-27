@@ -14,7 +14,7 @@ public final class RecordingSink implements RuleResultSink {
   private final List<RuleError> errors = new ArrayList<>();
 
   @Override
-  public void onSuccess(RuleResult result) {
+  public void onResult(RuleResult result) {
     results.add(result);
   }
 

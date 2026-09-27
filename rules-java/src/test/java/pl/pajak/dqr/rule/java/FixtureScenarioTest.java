@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import pl.pajak.dqr.rule.java.testing.JsonPartnerRecords;
-import pl.pajak.dqr.rule.java.testing.ListRecordSource;
-import pl.pajak.dqr.rule.java.testing.RecordingSink;
 import pl.pajak.dqr.engine.Decision;
 import pl.pajak.dqr.engine.EngineInput;
 import pl.pajak.dqr.engine.RuleEngine;
@@ -21,6 +18,9 @@ import pl.pajak.dqr.engine.rule.Rule;
 import pl.pajak.dqr.engine.rule.RuleCatalog;
 import pl.pajak.dqr.engine.rule.RuleSeverity;
 import pl.pajak.dqr.engine.rule.RuleStatus;
+import pl.pajak.dqr.rule.java.testing.JsonPartnerRecords;
+import pl.pajak.dqr.rule.java.testing.ListRecordSource;
+import pl.pajak.dqr.rule.java.testing.RecordingSink;
 
 /**
  * The scenario from the task description, run end to end in one pass: the real engine over the real
@@ -44,7 +44,7 @@ class FixtureScenarioTest {
     final var sink = new RecordingSink();
 
     final var summary =
-        new RuleEngine()
+        RuleEngine.newInstance()
             .process(
                 EngineInput.builder(catalogWithFailingRule(), new ListRecordSource(records), sink)
                     .build());
