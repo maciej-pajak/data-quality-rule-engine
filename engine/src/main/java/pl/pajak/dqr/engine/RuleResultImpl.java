@@ -6,6 +6,7 @@ import pl.pajak.dqr.engine.rule.RuleSeverity;
 record RuleResultImpl(
     String recordRefId,
     String ruleId,
+    String ruleLabel,
     Decision decision,
     RuleSeverity severity,
     Provenance provenance)

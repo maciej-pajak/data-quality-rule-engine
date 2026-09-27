@@ -109,6 +109,7 @@ final class RuleEngineImpl implements RuleEngine {
     return new RuleResultImpl(
         partnerRecord.refId(),
         rule.id(),
+        rule.label(),
         resolved.decision(),
         rule.severity(),
         new RuleResultImpl.ProvenanceImpl(

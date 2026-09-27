@@ -227,10 +227,13 @@ class RuleEngineTest {
 
     @Test
     void carryTheRuleAndTheRecordThatProducedThem() {
-      run(FakeRuleCatalog.of(TestRule.of("rule-1")), FakeRecordSource.of(TestRecord.of("r-1")));
+      run(
+          FakeRuleCatalog.of(TestRule.builder("rule-1").withLabel("Rule 1").build()),
+          FakeRecordSource.of(TestRecord.of("r-1")));
 
       final var result = sink.results().getFirst();
       assertThat(result.ruleId()).isEqualTo("rule-1");
+      assertThat(result.ruleLabel()).isEqualTo("Rule 1");
       assertThat(result.recordRefId()).isEqualTo("r-1");
     }
 

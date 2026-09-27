@@ -102,6 +102,7 @@ class RulesRunTest {
     return new RuleResultImpl(
         recordRefId,
         "rule-1",
+        "Rule 1",
         decision,
         severity,
         new RuleResultImpl.ProvenanceImpl("value", "description", Map.of()));

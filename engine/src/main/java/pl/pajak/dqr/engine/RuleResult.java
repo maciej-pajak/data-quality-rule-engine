@@ -28,6 +28,16 @@ public sealed interface RuleResult permits RuleResultImpl {
   String ruleId();
 
   /**
+   * Returns the human-readable name of the rule that was evaluated.
+   *
+   * <p>Carried with the outcome so that a report can name the rule without consulting the catalog
+   * again. It is a property of the rule, not of this outcome.
+   *
+   * @return the rule's label, as reported by {@link pl.pajak.dqr.engine.rule.Rule#label()}
+   */
+  String ruleLabel();
+
+  /**
    * Returns the decision the rule's mapping resolved for the computed value.
    *
    * @return the decision
