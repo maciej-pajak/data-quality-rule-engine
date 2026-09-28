@@ -9,7 +9,8 @@ import pl.pajak.dqr.engine.rule.RuleSeverity;
 
 /**
  * The state of one run: it forwards every result and every error to the sink as they are produced,
- * and keeps only the counters needed for the summary.
+ * and keeps only the counters needed for the summary. A failure of the sink is not counted as one
+ * of the run's errors; it ends the run as a {@link ResultSinkException}.
  *
  * <p>Not thread safe; a run evaluates rules on the calling thread.
  */
@@ -31,9 +32,14 @@ final class RulesRun {
         resultsCount, errorsCount, resultsCountByDecision, resultsCountBySeverity);
   }
 
+  /** Hands a result to the sink and counts it, so that only what the sink accepted is counted. */
   void onResult(RuleResult result) {
+    try {
+      resultSink.onResult(result);
+    } catch (Exception ex) {
+      throw new ResultSinkException(result.recordRefId(), result.ruleId(), "a result", ex);
+    }
     countResult(result);
-    resultSink.onResult(result);
   }
 
   /** Reports a failure the rule detected itself. */
@@ -52,8 +58,12 @@ final class RulesRun {
   }
 
   private void onFailure(RuleError error) {
+    try {
+      resultSink.onError(error);
+    } catch (Exception ex) {
+      throw new ResultSinkException(error.recordRefId(), error.ruleId(), "an error", ex);
+    }
     errorsCount++;
-    resultSink.onError(error);
   }
 
   private void countResult(RuleResult result) {

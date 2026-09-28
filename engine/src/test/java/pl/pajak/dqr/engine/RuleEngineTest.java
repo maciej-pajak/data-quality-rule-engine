@@ -1,6 +1,7 @@
 package pl.pajak.dqr.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.ArrayList;
@@ -384,6 +385,69 @@ class RuleEngineTest {
       assertThat(sink.errors()).extracting(RuleError::recordRefId).containsExactly("r-2");
     }
 
+    /**
+     * A sink that refuses ends the run instead of being asked again for every record left. It is
+     * the one failure the engine does not isolate: a rule is one of many, the sink is the only
+     * destination there is, and the error reporting the loss would go to the same sink.
+     */
+    @Test
+    void aSinkThatRefusesAResultEndsTheRunInsteadOfBeingAskedAgain() {
+      final var refusing = new RefusingSink(true, false);
+      final var source =
+          FakeRecordSource.of(TestRecord.of("r-1"), TestRecord.of("r-2"), TestRecord.of("r-3"));
+
+      assertThatThrownBy(() -> runInto(FakeRuleCatalog.of(TestRule.of("rule-1")), source, refusing))
+          .isInstanceOf(ResultSinkException.class)
+          .hasCauseInstanceOf(IllegalStateException.class)
+          .satisfies(
+              thrown -> {
+                final var sinkFailure = (ResultSinkException) thrown;
+                assertThat(sinkFailure.recordRefId()).isEqualTo("r-1");
+                assertThat(sinkFailure.ruleId()).isEqualTo("rule-1");
+              });
+
+      assertThat(refusing.calls()).as("the sink is not handed the records that were left").isOne();
+    }
+
+    /** The same holds for the other half of the sink: an error it refuses ends the run too. */
+    @Test
+    void aSinkThatRefusesAnErrorEndsTheRun() {
+      final var refusing = new RefusingSink(false, true);
+      final var failing = TestRule.builder("rule-1").throwing(new IllegalStateException("no"));
+
+      assertThatThrownBy(
+              () ->
+                  runInto(
+                      FakeRuleCatalog.of(failing.build()),
+                      FakeRecordSource.of(TestRecord.of("r-1"), TestRecord.of("r-2")),
+                      refusing))
+          .isInstanceOf(ResultSinkException.class)
+          .hasMessageContaining("an error")
+          .hasMessageContaining("r-1");
+
+      assertThat(refusing.calls()).isOne();
+    }
+
+    /** A run the sink ended reports no summary; what it accepted before the failure stands. */
+    @Test
+    void aRunTheSinkEndedReportsNoSummary() {
+      final var refusing = new RefusingSink(true, false);
+      refusing.acceptFirst(2);
+
+      assertThatThrownBy(
+              () ->
+                  runInto(
+                      FakeRuleCatalog.of(TestRule.of("rule-1")),
+                      FakeRecordSource.of(
+                          TestRecord.of("r-1"), TestRecord.of("r-2"), TestRecord.of("r-3")),
+                      refusing))
+          .isInstanceOf(ResultSinkException.class);
+
+      assertThat(refusing.accepted())
+          .extracting(RuleResult::recordRefId)
+          .containsExactly("r-1", "r-2");
+    }
+
     @Test
     void theOtherRulesAreStillEvaluated() {
       final var catalog =
@@ -464,5 +528,60 @@ class RuleEngineTest {
       UnaryOperator<EngineInput.Builder> configure) {
     final var builder = configure.apply(EngineInput.builder(catalog, source, sink));
     return RuleEngine.newInstance().process(builder.build());
+  }
+
+  private static RunSummary runInto(
+      FakeRuleCatalog catalog, FakeRecordSource source, RuleResultSink into) {
+    return RuleEngine.newInstance().process(EngineInput.builder(catalog, source, into).build());
+  }
+
+  /**
+   * A sink that refuses what it is handed, after accepting a given number of results first. It
+   * counts every call, so a test can assert that the engine stopped asking.
+   */
+  private static final class RefusingSink implements RuleResultSink {
+
+    private final boolean refuseResults;
+    private final boolean refuseErrors;
+    private final List<RuleResult> accepted = new ArrayList<>();
+
+    private int calls = 0;
+    private int acceptFirst = 0;
+
+    private RefusingSink(boolean refuseResults, boolean refuseErrors) {
+      this.refuseResults = refuseResults;
+      this.refuseErrors = refuseErrors;
+    }
+
+    /** Accepts {@code count} results before it starts refusing. */
+    void acceptFirst(int count) {
+      this.acceptFirst = count;
+    }
+
+    @Override
+    public void onResult(RuleResult result) {
+      calls++;
+      if (refuseResults && accepted.size() >= acceptFirst) {
+        throw new IllegalStateException("the response is already committed");
+      }
+      accepted.add(result);
+    }
+
+    @Override
+    public void onError(RuleError error) {
+      calls++;
+      if (refuseErrors) {
+        throw new IllegalStateException("the response is already committed");
+      }
+    }
+
+    /** How often either method was called, refusals included. */
+    int calls() {
+      return calls;
+    }
+
+    List<RuleResult> accepted() {
+      return List.copyOf(accepted);
+    }
   }
 }

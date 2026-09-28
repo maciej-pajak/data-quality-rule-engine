@@ -39,8 +39,9 @@ public sealed interface RuleEngine permits RuleEngineImpl {
    *
    * @param engineInput the configuration of the run
    * @return the counts of what the run produced
-   * @throws RuntimeException if the catalog cannot be loaded, the source cannot deliver a batch, or
-   *     the sink fails to accept an error
+   * @throws ResultSinkException if the sink fails to accept an outcome, which ends the run: the
+   *     outcomes delivered before it stand, but no summary is returned
+   * @throws RuntimeException if the catalog cannot be loaded or the source cannot deliver a batch
    */
   RunSummary process(EngineInput engineInput);
 }

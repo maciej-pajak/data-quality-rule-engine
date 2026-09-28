@@ -4,7 +4,7 @@ import java.util.Map;
 import pl.pajak.dqr.engine.rule.RuleSeverity;
 
 /**
- * What a finished run produced, returned by {@link RuleEngineImpl#process(EngineInput)}.
+ * What a finished run produced, returned by {@link RuleEngine#process(EngineInput)}.
  *
  * <p>The counters are per result, not per record: one record evaluated by three rules contributes
  * three results. The number of distinct records is not reported, as a run over an unbounded source
@@ -18,7 +18,7 @@ public sealed interface RunSummary permits RunSummaryImpl {
   /**
    * Returns how many results the run produced.
    *
-   * @return the number of calls made to {@link RuleResultSink#onResult(RuleResult)}
+   * @return the number of calls to {@link RuleResultSink#onResult(RuleResult)} the sink accepted
    */
   int resultsCount();
 

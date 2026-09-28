@@ -58,6 +58,9 @@ final class RuleEngineImpl implements RuleEngine {
             case ComputationResult.ComputationError error ->
                 validationRun.onFailure(rule, partnerRecord, error);
           }
+        } catch (ResultSinkException ex) {
+          // The destination of the run failed, not the rule. There is nowhere left to report to.
+          throw ex;
         } catch (Exception ex) {
           validationRun.onFailure(rule, partnerRecord, ex);
         }

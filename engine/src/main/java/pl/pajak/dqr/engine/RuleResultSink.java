@@ -3,14 +3,13 @@ package pl.pajak.dqr.engine;
 /**
  * Receives the outcomes of a run as the engine produces them.
  *
- * <p>Results are streamed rather than collected: the engine never holds the outcomes of a run, so a
- * sink can write them to a response, a file or a queue of any size. Both methods are called on the
- * thread that called {@link RuleEngineImpl#process(EngineInput)}, one call at a time, so an
- * implementation needs no synchronisation of its own.
+ * <p>Both methods are called on the thread that called {@link RuleEngine#process(EngineInput)}, one
+ * call at a time, so an implementation needs no synchronisation of its own.
  *
- * <p>Implementations should not throw. An exception from {@link #onResult(RuleResult)} is reported
- * as a {@link RuleError} for the record and rule being evaluated; an exception from {@link
- * #onError(RuleError)} ends the run.
+ * <p>Implementations should not throw: an exception from either method ends the run as a {@link
+ * ResultSinkException}. A sink that would rather drop single outcomes than end the run catches
+ * inside these methods, and counts what it dropped itself — the {@link RunSummary} counts only the
+ * outcomes the sink accepted.
  *
  * @see RunSummary
  */
