@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: data-quality-http-api
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui

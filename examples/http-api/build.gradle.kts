@@ -1,9 +1,7 @@
 plugins {
     java
     alias(libs.plugins.spotless)
-    // The Spring Boot plugin is applied together with the Application class:
-    // `bootJar` needs a main class, and the skeleton has no sources yet.
-    // The version is already pinned in the root build and the catalog.
+    alias(libs.plugins.spring.boot)
 }
 
 description = "Example host: an HTTP API that embeds the engine and streams results."
@@ -14,8 +12,16 @@ java {
     }
 }
 
+tasks.withType<JavaCompile>().configureEach {
+    options.release = 21
+    options.compilerArgs.addAll(listOf("-Xlint:all", "-Werror"))
+}
+
 dependencies {
     implementation(project(":engine"))
+
+    implementation(project(":examples:rules-catalog-java"))
+
     implementation(platform(libs.spring.boot.bom))
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation(libs.springdoc.openapi.webmvc)
