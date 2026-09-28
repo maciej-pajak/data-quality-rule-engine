@@ -41,10 +41,10 @@ class RuleEngineVolumeTest {
     assertThat(source.mintedRecords()).isEqualTo(RECORD_COUNT);
     assertThat(summary.resultsCount()).isEqualTo(RECORD_COUNT * 3);
     assertThat(summary.errorsCount()).isZero();
-    assertThat(sink.resultsCount()).isEqualTo(summary.resultsCount());
+    assertThat(summary.resultsCount()).isEqualTo(sink.resultsCount());
     assertThat(summary.resultsCountByDecision())
         .containsExactlyInAnyOrderEntriesOf(
-            Map.of(Decision.VALID, RECORD_COUNT * 2, Decision.INVALID, RECORD_COUNT));
+            Map.of(Decision.VALID, RECORD_COUNT * 2L, Decision.INVALID, (long) RECORD_COUNT));
   }
 
   @Test

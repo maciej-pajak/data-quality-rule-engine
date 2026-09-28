@@ -96,7 +96,7 @@ class FixtureScenarioTest {
     assertThat(summary.errorsCount()).isOne();
     assertThat(summary.resultsCountByDecision())
         .containsExactlyInAnyOrderEntriesOf(
-            Map.of(Decision.VALID, 5, Decision.INVALID, 4, Decision.NOT_APPLICABLE, 2));
+            Map.of(Decision.VALID, 5L, Decision.INVALID, 4L, Decision.NOT_APPLICABLE, 2L));
   }
 
   /** The fields one rule read while it decided one record, as the result's provenance kept them. */

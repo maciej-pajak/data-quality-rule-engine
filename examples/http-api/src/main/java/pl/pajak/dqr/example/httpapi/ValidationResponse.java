@@ -71,10 +71,10 @@ record ValidationResponse(List<Result> results, List<Failure> errors, Summary su
 
   /** The counts of the run, as the engine reported them. */
   record Summary(
-      int resultsCount,
-      int errorsCount,
-      Map<Decision, Integer> resultsCountByDecision,
-      Map<RuleSeverity, Integer> resultsCountBySeverity) {
+      long resultsCount,
+      long errorsCount,
+      Map<Decision, Long> resultsCountByDecision,
+      Map<RuleSeverity, Long> resultsCountBySeverity) {
 
     static Summary of(RunSummary summary) {
       return new Summary(

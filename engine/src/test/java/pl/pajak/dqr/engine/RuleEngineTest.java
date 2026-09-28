@@ -512,9 +512,9 @@ class RuleEngineTest {
       assertThat(summary.resultsCount()).isEqualTo(sink.results().size()).isEqualTo(4);
       assertThat(summary.errorsCount()).isEqualTo(sink.errors().size()).isEqualTo(2);
       assertThat(summary.resultsCountByDecision())
-          .isEqualTo(Map.of(Decision.VALID, 2, Decision.REVIEW, 2));
+          .isEqualTo(Map.of(Decision.VALID, 2L, Decision.REVIEW, 2L));
       assertThat(summary.resultsCountBySeverity())
-          .isEqualTo(Map.of(RuleSeverity.ERROR, 2, RuleSeverity.WARNING, 2));
+          .isEqualTo(Map.of(RuleSeverity.ERROR, 2L, RuleSeverity.WARNING, 2L));
     }
   }
 

@@ -17,11 +17,10 @@ import pl.pajak.dqr.engine.rule.RuleSeverity;
 final class RulesRun {
 
   private final RuleResultSink resultSink;
-  private final Map<Decision, Integer> resultsCountByDecision = new EnumMap<>(Decision.class);
-  private final Map<RuleSeverity, Integer> resultsCountBySeverity =
-      new EnumMap<>(RuleSeverity.class);
-  private int resultsCount = 0;
-  private int errorsCount = 0;
+  private final Map<Decision, Long> resultsCountByDecision = new EnumMap<>(Decision.class);
+  private final Map<RuleSeverity, Long> resultsCountBySeverity = new EnumMap<>(RuleSeverity.class);
+  private long resultsCount = 0;
+  private long errorsCount = 0;
 
   RulesRun(RuleResultSink resultSink) {
     this.resultSink = Objects.requireNonNull(resultSink, "resultSink cannot be null");
@@ -68,8 +67,8 @@ final class RulesRun {
 
   private void countResult(RuleResult result) {
     resultsCount++;
-    resultsCountByDecision.merge(result.decision(), 1, Integer::sum);
-    resultsCountBySeverity.merge(result.severity(), 1, Integer::sum);
+    resultsCountByDecision.merge(result.decision(), 1L, Long::sum);
+    resultsCountBySeverity.merge(result.severity(), 1L, Long::sum);
   }
 
   private static String describe(Throwable cause) {

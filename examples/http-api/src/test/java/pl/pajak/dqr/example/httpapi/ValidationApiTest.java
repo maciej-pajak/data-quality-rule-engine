@@ -142,8 +142,8 @@ class ValidationApiTest {
             new ValidationResponse.Summary(
                 9,
                 0,
-                Map.of(Decision.VALID, 3, Decision.INVALID, 4, Decision.NOT_APPLICABLE, 2),
-                Map.of(RuleSeverity.WARNING, 9)));
+                Map.of(Decision.VALID, 3L, Decision.INVALID, 4L, Decision.NOT_APPLICABLE, 2L),
+                Map.of(RuleSeverity.WARNING, 9L)));
   }
 
   @Test

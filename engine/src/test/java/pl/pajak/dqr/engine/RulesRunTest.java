@@ -34,9 +34,9 @@ class RulesRunTest {
     assertThat(summary.resultsCount()).isEqualTo(3);
     assertThat(summary.errorsCount()).isZero();
     assertThat(summary.resultsCountByDecision())
-        .isEqualTo(Map.of(Decision.VALID, 2, Decision.REVIEW, 1));
+        .isEqualTo(Map.of(Decision.VALID, 2L, Decision.REVIEW, 1L));
     assertThat(summary.resultsCountBySeverity())
-        .isEqualTo(Map.of(RuleSeverity.ERROR, 2, RuleSeverity.WARNING, 1));
+        .isEqualTo(Map.of(RuleSeverity.ERROR, 2L, RuleSeverity.WARNING, 1L));
   }
 
   @Test
@@ -51,7 +51,7 @@ class RulesRunTest {
 
     assertThat(summary.errorsCount()).isEqualTo(1);
     assertThat(summary.resultsCount()).isEqualTo(1);
-    assertThat(summary.resultsCountByDecision()).isEqualTo(Map.of(Decision.VALID, 1));
+    assertThat(summary.resultsCountByDecision()).isEqualTo(Map.of(Decision.VALID, 1L));
   }
 
   @Test
@@ -96,7 +96,7 @@ class RulesRunTest {
     run.onResult(result("r-2", Decision.VALID, RuleSeverity.ERROR));
 
     assertThat(summary.resultsCount()).isEqualTo(1);
-    assertThat(summary.resultsCountByDecision()).isEqualTo(Map.of(Decision.VALID, 1));
+    assertThat(summary.resultsCountByDecision()).isEqualTo(Map.of(Decision.VALID, 1L));
   }
 
   private static RuleResult result(String recordRefId, Decision decision, RuleSeverity severity) {

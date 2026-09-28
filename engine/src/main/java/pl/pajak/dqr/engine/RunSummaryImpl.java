@@ -4,10 +4,10 @@ import java.util.Map;
 import pl.pajak.dqr.engine.rule.RuleSeverity;
 
 record RunSummaryImpl(
-    int resultsCount,
-    int errorsCount,
-    Map<Decision, Integer> resultsCountByDecision,
-    Map<RuleSeverity, Integer> resultsCountBySeverity)
+    long resultsCount,
+    long errorsCount,
+    Map<Decision, Long> resultsCountByDecision,
+    Map<RuleSeverity, Long> resultsCountBySeverity)
     implements RunSummary {
 
   RunSummaryImpl {
