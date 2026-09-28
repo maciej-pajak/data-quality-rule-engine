@@ -1,8 +1,10 @@
 package pl.pajak.dqr.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
@@ -70,6 +72,42 @@ class RuleFilterTest {
     void aNegationIsNotCollapsedWhenNested() {
       assertThat(RuleFilter.not(RuleFilter.not(RELEASED)))
           .isEqualTo(new RuleFilter.Not(new RuleFilter.Not(RELEASED)));
+    }
+  }
+
+  /**
+   * A filter is a value, so the list a composite was built from is the caller's and what the
+   * composite holds is its own. Otherwise a caller could empty a conjunction the engine is about to
+   * match, past the invariant the constructor checked.
+   */
+  @Nested
+  class Immutability {
+
+    @Test
+    void aConjunctionKeepsTheOperandsItWasBuiltWith() {
+      final var operands = new ArrayList<RuleFilter>(List.of(RELEASED, ADDRESS));
+
+      final var filter = new RuleFilter.And(operands);
+      operands.clear();
+
+      assertThat(filter.filters()).containsExactly(RELEASED, ADDRESS);
+    }
+
+    @Test
+    void aDisjunctionKeepsTheOperandsItWasBuiltWith() {
+      final var operands = new ArrayList<RuleFilter>(List.of(RELEASED, ADDRESS));
+
+      final var filter = new RuleFilter.Or(operands);
+      operands.clear();
+
+      assertThat(filter.filters()).containsExactly(RELEASED, ADDRESS);
+    }
+
+    @Test
+    void theOperandsOfACompositeCannotBeChangedThroughIt() {
+      final var operands = new RuleFilter.And(List.of(RELEASED, ADDRESS)).filters();
+
+      assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(operands::clear);
     }
   }
 

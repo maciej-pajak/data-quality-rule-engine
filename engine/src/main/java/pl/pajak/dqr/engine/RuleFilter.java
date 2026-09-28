@@ -156,11 +156,14 @@ public sealed interface RuleFilter {
   record And(List<RuleFilter> filters) implements RuleFilter {
 
     /**
-     * Checks that there is something to combine.
+     * Checks that there is something to combine, and keeps a copy of it, so that a list the caller
+     * goes on to change cannot change this filter or break the invariant just checked.
      *
      * @throws IllegalArgumentException if fewer than two filters are given
+     * @throws NullPointerException if the list or one of its filters is {@code null}
      */
     public And {
+      filters = List.copyOf(filters);
       if (filters.size() < 2) {
         throw new IllegalArgumentException(
             "And requires at least 2 filters, got " + filters.size());
@@ -177,11 +180,14 @@ public sealed interface RuleFilter {
   record Or(List<RuleFilter> filters) implements RuleFilter {
 
     /**
-     * Checks that there is something to combine.
+     * Checks that there is something to combine, and keeps a copy of it, so that a list the caller
+     * goes on to change cannot change this filter or break the invariant just checked.
      *
      * @throws IllegalArgumentException if fewer than two filters are given
+     * @throws NullPointerException if the list or one of its filters is {@code null}
      */
     public Or {
+      filters = List.copyOf(filters);
       if (filters.size() < 2) {
         throw new IllegalArgumentException("Or requires at least 2 filters, got " + filters.size());
       }
